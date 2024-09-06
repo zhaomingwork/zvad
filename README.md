@@ -1,18 +1,18 @@
 # VAD Wrapper in C for most popular vad models, such as Silero
 
-C Wrapper for most popular vad models (silero, coming soon webrtc, fsmnvad...).
+C Wrapper for most popular vad models (silero, maybe in future webrtc, fsmnvad...).
 You can use it in freeswitch or other environments, and replace the orginal vad module.  
 
-# Interface
-zvad.h  provide an uniform vad inferace
+## Interface
+zvad.h  provide an uniform vad inferace.
 zmodel.h provide a unified interface for different vad models.
 
-# Simple c example in pseudocode
+## Simple c example in pseudocode
 
 include header #include "../zvad.h" in your code, put libzvad.so in your PATH, and link this library. 
-example see ./c_example/example.c or ./c_example/mpf_activity_detector.c
+detail example see ./c_example/example.c or ./c_example/mpf_activity_detector.c
 
-6 states defined for the vad
+### STATE defined for the vad
 ```bash
 	typedef enum
 	{
@@ -25,7 +25,7 @@ example see ./c_example/example.c or ./c_example/mpf_activity_detector.c
 	} ZVAD_OBJ_STATE;
 ```
 
-pseudocode as fllowing:
+### pseudocode code for example
 
 ```bash
    float buff_float[chunk_size];
