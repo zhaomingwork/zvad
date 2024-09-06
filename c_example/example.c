@@ -1,9 +1,7 @@
-/*
- * @Author: Zhao Ming
- * @Date: 2024-09-02 20:22:49
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-05 20:31:25
- * @Description: 
+/**
+ * Description:
+ * Copyright 2024. All Rights Reserved.
+ * Author: Zhao Ming (zhaomingwork@qq.com)
  */
 #include "../include/zvad.h"
 

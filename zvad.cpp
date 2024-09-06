@@ -2,7 +2,7 @@
  * Description:
  * Copyright 2024. All Rights Reserved.
  * Author: Zhao Ming (zhaomingwork@qq.com)
- */ 
+ */
 
 #include "include/zmodel.h"
 #include "include/zvad.h"
@@ -88,9 +88,9 @@ ZVAD_OBJ_STATE vad_get_state(ZVAD_OBJ *vad)
  * @param {int} mode
  * @return {*}
  */
-ZVAD_OBJ *vad_init(char* model_path,int sample_rate, int channels, int mode)
+ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode)
 {
-	//std::wstring path = L"silero_vad.onnx";
+	// std::wstring path = L"silero_vad.onnx";
 	std::wstring path(model_path, model_path + strlen(model_path));
 	VadEngine *vad_engine = create_engine(path);
 	ZVAD_OBJ *vad_obj = (ZVAD_OBJ *)malloc(sizeof(ZVAD_OBJ));
@@ -100,7 +100,7 @@ ZVAD_OBJ *vad_init(char* model_path,int sample_rate, int channels, int mode)
 	vad_obj->sample_rate = sample_rate;
 	vad_obj->channels = channels;
 	vad_obj->mode = mode;
-	vad_obj->data_len=0;
+	vad_obj->data_len = 0;
 
 	return vad_obj;
 }
@@ -121,16 +121,16 @@ ZVAD_OBJ_STATE vad_feed(ZVAD_OBJ *vad, float *data, int data_len)
 	// loop to split the data in CHUNK_SIZE and feed to vad engine
 	while (samples->size() > CHUNK_SIZE)
 	{
-        // copy chunk size data to a temp buffer
+		// copy chunk size data to a temp buffer
 		std::vector<float> sample_chunk(samples->begin(), samples->begin() + CHUNK_SIZE);
-        // remove already feeded buffer in engine buffer
+		// remove already feeded buffer in engine buffer
 		samples->erase(samples->begin(), samples->begin() + CHUNK_SIZE);
 		vad->data_len = vad->data_len + sample_chunk.size();
 		// the possiblity of the chunk is speech
 		float poss = vad_engine->predict_possible(sample_chunk);
 
 		update_vad_state(vad, poss);
-		//printf("poss=%f,samples->size()=%ld\n", poss, samples->size());
+		// printf("poss=%f,samples->size()=%ld\n", poss, samples->size());
 	}
 	return vad_get_state(vad);
 }

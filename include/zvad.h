@@ -1,10 +1,4 @@
-/*
- * @Author: Zhao Ming
- * @Date: 2024-09-01 20:10:08
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-03 21:51:00
- * @Description:
- */
+
 /**
  * Description:
  * Copyright 2024. All Rights Reserved.
@@ -33,43 +27,43 @@ extern "C"
 		int last_silence_len;
 		ZVAD_OBJ_STATE last_state;
 		void *vad_engine;
-		void *vector_samples;  // buffer for feed data
+		void *vector_samples; // buffer for feed data
 		float new_state_ave;
-		int data_len;  // total buffer size that was feeded to engine
+		int data_len; // total buffer size that was feeded to engine
 		int sample_rate;
 		int channels;
 		int mode;
 
 	} ZVAD_OBJ;
 
- /**
-  * @description: init engine for ZVAD
-  * @param {int} sample_rate
-  * @param {int} channels
-  * @param {int} mode
-  * @return {*}
-  */    
-	ZVAD_OBJ *vad_init(char* model_path,int sample_rate, int channels, int mode);
-	
- /**
-  * @description: reset the state of the ZVAD
-  * @param {ZVAD_OBJ} *vad
-  * @return {*}
-  */	
+	/**
+	 * @description: init engine for ZVAD
+	 * @param {int} sample_rate
+	 * @param {int} channels
+	 * @param {int} mode
+	 * @return {*}
+	 */
+	ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode);
+
+	/**
+	 * @description: reset the state of the ZVAD
+	 * @param {ZVAD_OBJ} *vad
+	 * @return {*}
+	 */
 	void vad_reset(ZVAD_OBJ *vad);
- /**
-  * @description: release the ZVAD engine
-  * @param {ZVAD_OBJ} *vad
-  * @return {*}
-  */	
+	/**
+	 * @description: release the ZVAD engine
+	 * @param {ZVAD_OBJ} *vad
+	 * @return {*}
+	 */
 	void vad_destroy(ZVAD_OBJ *vad);
- /**
-  * @description: 
-  * @param {ZVAD_OBJ} *vad
-  * @param {float} *data
-  * @param {int} data_len
-  * @return {*}
-  */ 
+	/**
+	 * @description:
+	 * @param {ZVAD_OBJ} *vad
+	 * @param {float} *data
+	 * @param {int} data_len
+	 * @return {*}
+	 */
 	ZVAD_OBJ_STATE vad_feed(ZVAD_OBJ *vad, float *data, int data_len);
 	ZVAD_OBJ_STATE vad_get_state(ZVAD_OBJ *vad);
 	// int sil_vad_state(ZVAD_OBJ* vad);
