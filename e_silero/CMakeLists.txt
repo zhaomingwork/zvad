@@ -1,5 +1,4 @@
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License.
+ 
 
 set(CMAKE_BUILD_TYPE Debug)
 add_library(e_silero SHARED silero_engine.cpp)
