@@ -80,7 +80,7 @@ MPF_DECLARE(mpf_activity_detector_t*) mpf_activity_detector_create(apr_pool_t *p
 	detector->noinput_timeout = 5000; /* 5 s */
 	detector->duration = 0;
 	detector->state = DETECTOR_STATE_INACTIVITY;
-	detector->zvad = vad_init("silero_vad.onnx",16000, 1, 0); // init zvad
+	detector->zvad = vad_init("silero_vad.onnx",16000, 1, 0 , 0.6); // init zvad
 	detector->pool = pool;
  
 	pthread_create(&detector->thread_id, NULL, destroy_thread, detector);

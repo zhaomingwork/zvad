@@ -46,22 +46,22 @@ void print_state(ZVAD_OBJ *vad)
  */
 void update_vad_state(ZVAD_OBJ *vad, float poss)
 {
-
-	if (poss >= 0.5 && vad->last_state != ZVAD_OBJ_STATE::ZVAD_OBJ_SPEAKING)
+    
+	if (poss >= vad->act_threshold && vad->last_state != ZVAD_OBJ_STATE::ZVAD_OBJ_SPEAKING)
 	{
 		vad->last_state = ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SPEAKING;
 	}
 
-	if (poss >= 0.5 - 0.15 && vad->last_state == ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SPEAKING)
+	if (poss >= vad->act_threshold - 0.15 && vad->last_state == ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SPEAKING)
 	{
 
 		vad->last_state = ZVAD_OBJ_STATE::ZVAD_OBJ_SPEAKING;
 	}
-	if (poss <= 0.5 - 0.15 && vad->last_state != ZVAD_OBJ_STATE::ZVAD_OBJ_SILENCE)
+	if (poss <= vad->act_threshold - 0.15 && vad->last_state != ZVAD_OBJ_STATE::ZVAD_OBJ_SILENCE)
 	{
 		vad->last_state = ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SILENCE;
 	}
-	if (poss <= 0.5 && vad->last_state == ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SILENCE)
+	if (poss <= vad->act_threshold && vad->last_state == ZVAD_OBJ_STATE::ZVAD_OBJ_BEGIN_SILENCE)
 	{
 		vad->last_state = ZVAD_OBJ_STATE::ZVAD_OBJ_SILENCE;
 	}
@@ -88,11 +88,12 @@ ZVAD_OBJ_STATE vad_get_state(ZVAD_OBJ *vad)
  * @param {int} mode
  * @return {*}
  */
-ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode)
+ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode, float act_threshold)
 {
 	// std::wstring path = L"silero_vad.onnx";
 	std::wstring path(model_path, model_path + strlen(model_path));
 	VadEngine *vad_engine = create_engine(path);
+	vad_engine->set_sample_rate(sample_rate);
 	ZVAD_OBJ *vad_obj = (ZVAD_OBJ *)malloc(sizeof(ZVAD_OBJ));
 	vad_obj->vad_engine = (void *)vad_engine;
 	std::vector<float> *samples = new std::vector<float>();
@@ -101,6 +102,7 @@ ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode)
 	vad_obj->channels = channels;
 	vad_obj->mode = mode;
 	vad_obj->data_len = 0;
+	vad_obj->act_threshold = act_threshold;
 
 	return vad_obj;
 }

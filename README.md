@@ -1,11 +1,4 @@
-<!--
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2024-09-05 21:20:59
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2024-09-05 21:55:28
- * @FilePath: /zvad/README.md
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
+
 # VAD Wrapper in C for most popular vad models, such as Silero
 
 C Wrapper for most popular vad models (silero, maybe in future webrtc, fsmnvad...).
@@ -37,7 +30,7 @@ detail example see ./c_example/example.c or ./c_example/mpf_activity_detector.c
 
 ```bash
    float buff_float[chunk_size];
-   ZVAD_OBJ* new_vad=vad_init(YOUR_MODEL_PATH,16000, 1,0);
+   ZVAD_OBJ* new_vad=vad_init(YOUR_MODEL_PATH,sample_rate, 1,0,voice_threshold);
    ZVAD_OBJ_STATE state=vad_feed(new_vad,(float*)buff_float,chunk_size);
    printf("now state is %d\n",state);
    vad_destroy(new_vad);

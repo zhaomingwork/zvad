@@ -27,6 +27,7 @@ extern "C"
 		int last_silence_len;
 		ZVAD_OBJ_STATE last_state;
 		void *vad_engine;
+		float act_threshold;  // threshold for detect speech
 		void *vector_samples; // buffer for feed data
 		float new_state_ave;
 		int data_len; // total buffer size that was feeded to engine
@@ -39,11 +40,12 @@ extern "C"
 	/**
 	 * @description: init engine for ZVAD
 	 * @param {int} sample_rate
-	 * @param {int} channels
-	 * @param {int} mode
+	 * @param {int} channels NOT_USED_NOW
+	 * @param {int} mode NOT_USED_NOW
+	 * @param {float} act_threshold threshold for speech
 	 * @return {*}
 	 */
-	ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode);
+	ZVAD_OBJ *vad_init(char *model_path, int sample_rate, int channels, int mode, float act_threshold);
 
 	/**
 	 * @description: reset the state of the ZVAD

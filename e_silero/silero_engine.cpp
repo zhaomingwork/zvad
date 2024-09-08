@@ -33,8 +33,10 @@ private:
 
 private:
     void init_model(const std::wstring &model_path) override;
+    void set_sample_rate(int sample_rate) override;
     void reset_states() override;
     float predict_possible(const std::vector<float> &data) override;
+    long get_chunk_size() override;
 
     int64_t window_size_samples; // Assign when init, support 256 512 768 for 8k; 512 1024 1536 for 16k.
     int sample_rate;             // Assign when init support 16000 or 8000
@@ -146,11 +148,21 @@ private:
 Singleton *Singleton::instance = nullptr;
 std::mutex Singleton::my_mutex;
 
-void SilEngine::init_model(const std::wstring &model_path)
+long SilEngine::get_chunk_size()
 {
-    Singleton *s = Singleton::getInstance(model_path);
-    session = s->getSession();
-    int Sample_rate = 16000;
+    if (sr[0] == 16000)
+        return 1024;
+    else
+        return 512;
+}
+void SilEngine::set_sample_rate(int sample_rate)
+{
+    if (sample_rate != 16000 && sample_rate != 8000)
+    {
+        printf("only support sample_rate in 16000 or 8000");
+        exit(0);
+    }
+
     int windows_frame_size = 32;
     float Threshold = 0.5;
     int min_silence_duration_ms = 0;
@@ -159,7 +171,7 @@ void SilEngine::init_model(const std::wstring &model_path)
     float max_speech_duration_s = std::numeric_limits<float>::infinity();
 
     threshold = Threshold;
-    sample_rate = Sample_rate;
+
     sr_per_ms = sample_rate / 1000;
 
     window_size_samples = windows_frame_size * sr_per_ms;
@@ -179,7 +191,42 @@ void SilEngine::init_model(const std::wstring &model_path)
     _state.resize(size_state);
     sr.resize(1);
     sr[0] = sample_rate;
-    printf("init model\n");
+    printf("sample_rate= %ld\n", sr[0]);
+}
+void SilEngine::init_model(const std::wstring &model_path)
+{
+    Singleton *s = Singleton::getInstance(model_path);
+    session = s->getSession();
+
+    sample_rate = 16000;
+    int windows_frame_size = 32;
+    float Threshold = 0.5;
+    int min_silence_duration_ms = 0;
+    int speech_pad_ms = 32;
+    int min_speech_duration_ms = 32;
+    float max_speech_duration_s = std::numeric_limits<float>::infinity();
+
+    threshold = Threshold;
+
+    sr_per_ms = sample_rate / 1000;
+
+    window_size_samples = windows_frame_size * sr_per_ms;
+
+    min_speech_samples = sr_per_ms * min_speech_duration_ms;
+    speech_pad_samples = sr_per_ms * speech_pad_ms;
+
+    max_speech_samples = (sample_rate * max_speech_duration_s - window_size_samples - 2 * speech_pad_samples);
+
+    min_silence_samples = sr_per_ms * min_silence_duration_ms;
+    min_silence_samples_at_max_speech = sr_per_ms * 98;
+
+    input.resize(window_size_samples);
+    input_node_dims[0] = 1;
+    input_node_dims[1] = window_size_samples;
+
+    _state.resize(size_state);
+    sr.resize(1);
+    sr[0] = sample_rate;
 }
 void SilEngine::reset_states()
 {
