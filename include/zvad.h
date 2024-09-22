@@ -62,11 +62,11 @@ extern "C"
 	/**
 	 * @description:
 	 * @param {ZVAD_OBJ} *vad
-	 * @param {float} *data
+	 * @param {char} *data # int 16bit 
 	 * @param {int} data_len
 	 * @return {*}
 	 */
-	ZVAD_OBJ_STATE vad_feed(ZVAD_OBJ *vad, float *data, int data_len);
+	ZVAD_OBJ_STATE vad_feed(ZVAD_OBJ *vad, char *data, int data_len);
 	ZVAD_OBJ_STATE vad_get_state(ZVAD_OBJ *vad);
 	// int sil_vad_state(ZVAD_OBJ* vad);
 

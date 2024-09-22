@@ -31,11 +31,18 @@ private:
     Ort::AllocatorWithDefaultOptions allocator;
     Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeCPU);
 
-private:
+public:
     void init_model(const std::wstring &model_path) override;
     void set_sample_rate(int sample_rate) override;
     void reset_states() override;
     float predict_possible(const std::vector<float> &data) override;
+	static void create_engine(const std::wstring &model_path);
+	~SilEngine() override{
+		
+	};
+
+ 
+private:
     long get_chunk_size() override;
 
     int64_t window_size_samples; // Assign when init, support 256 512 768 for 8k; 512 1024 1536 for 16k.
@@ -191,7 +198,7 @@ void SilEngine::set_sample_rate(int sample_rate)
     _state.resize(size_state);
     sr.resize(1);
     sr[0] = sample_rate;
-    printf("sample_rate= %ld\n", sr[0]);
+    //printf("sample_rate= %ld\n", sr[0]);
 }
 void SilEngine::init_model(const std::wstring &model_path)
 {
@@ -278,7 +285,7 @@ float SilEngine::predict_possible(const std::vector<float> &data)
  * @description: create this engine class by its interface
  * @return {*}
  */
-VadEngine *create_engine(const std::wstring &model_path)
+VadEngine* VadEngine::create_engine(const std::wstring &model_path)
 {
     VadEngine *new_engine = new SilEngine();
     new_engine->init_model(model_path);

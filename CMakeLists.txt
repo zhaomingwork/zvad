@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
  
 add_subdirectory(e_silero)
-
+add_subdirectory(pybind)
 add_library(zvad SHARED zvad.cpp)
 
 link_directories(${ONNXRUNTIME_ROOTDIR}/lib)

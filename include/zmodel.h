@@ -18,13 +18,15 @@ public:
 	virtual void reset_states() = 0;
 	virtual float predict_possible(const std::vector<float> &data) = 0;
 	virtual long get_chunk_size() = 0;
-};
-
+	virtual ~VadEngine()= default;
 /**
  * @description: return instance of the vad model
  * @param {wstring} &model_path
  * @return {*}
  */
-VadEngine *create_engine(const std::wstring &model_path);
+    static VadEngine *create_engine(const std::wstring &model_path);
+};
+
+
 
 #endif // ENGINE_INTERFACE_H

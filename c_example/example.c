@@ -49,25 +49,21 @@ int main(int argc, char** argv)
 	int sample_rate=16000;
 	ZVAD_OBJ* new_vad=vad_init(model_path,sample_rate, 1,0,0.8);
 	int chunk_size=1024;
-	short   buff[chunk_size];               // short buffer for file 
+	char   buff[chunk_size*2];               // short buffer for file 
 	float buff_float[chunk_size];           // float buffer
 	
 	for(long i=0;i<file_len/2;i=i+chunk_size)
 	{
-		int read_len=fread(buff, sizeof(short), chunk_size, wav_fp);
-		for(int j=0;j<read_len;j++)
-		{
+		int read_len=fread(buff, sizeof(char), chunk_size*2, wav_fp);
  
-			buff_float[j]=(float)buff[j]/32768.0;  // convert from short to float
-		}
-		ZVAD_OBJ_STATE state=vad_feed(new_vad,(float*)buff_float,chunk_size);
+		ZVAD_OBJ_STATE state=vad_feed(new_vad,(char*)buff,read_len);
 		if(state==1) // when detect voice print the time and state
 		{
-			printf("time %0.2f, detected voice \n",(float)(new_vad->data_len)/sample_rate);
+			printf("time %0.2f, %d,detected voice \n",(float)(new_vad->data_len)/sample_rate,new_vad->data_len);
 	    }
 		else
 		{
-			printf("time %0.2f, not voice \n",(float)(new_vad->data_len)/sample_rate);
+			printf("time %0.2f,%d, not voice \n",(float)(new_vad->data_len)/sample_rate,new_vad->data_len);
 		}
 	}
 	fclose(wav_fp);

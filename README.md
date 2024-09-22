@@ -36,6 +36,26 @@ detail example see ./c_example/example.c or ./c_example/mpf_activity_detector.c
    vad_destroy(new_vad);
 ```
 
+### python example
+export python lib by pybind11
+
+```bash
+import py_zvad
+ZVAD_OBJ=py_zvad.vad_init("PATH/silero_vad.onnx",16000,1,0,0.8)
+ 
+test_chunk=3200
+with open("../models/vad_test.wav","rb") as f:
+   date_byte=f.read()
+   for i in range(0,len(date_byte),test_chunk):
+     state=py_zvad.vad_feed(ZVAD_OBJ,date_byte[i:i+test_chunk],test_chunk)
+     if state==1: # when detect voice print the time and state
+	     print("time ",ZVAD_OBJ.data_len,str(ZVAD_OBJ.data_len/16000),", detected voice")
+     else:
+        print("time ",ZVAD_OBJ.data_len,str((ZVAD_OBJ.data_len)/16000)+", not voice")
+
+py_zvad.vad_destroy(ZVAD_OBJ)
+```
+
 ## Requirements
 
 Code are tested in the environments
@@ -53,11 +73,14 @@ Code are tested in the environments
    # Build
    cd zvad
    mkdir build && cd build
-   cmake .. -DONNXRUNTIME_ROOTDIR=<PATH TO THE ONNXRUNTIME>
+   cmake .. -DONNXRUNTIME_ROOTDIR=<PATH TO THE ONNXRUNTIME> -DPYTHON_EXECUTABLE=$(which python)
    make
 
    # Run example
    ./c_example/example ../models/silero_vad.onnx ../models/vad_test.wav
+
+   # Run python example
+   python ../python_example/silence_trim.py
    
    ```
 
